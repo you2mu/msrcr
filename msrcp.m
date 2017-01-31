@@ -1,6 +1,6 @@
 %img = imread(pathname)
-%nscalsÎª³ß¶ÈµÄÊıÄ¿
-%maxscalÎª³ß¶È×î´óÖµ Ä¬ÈÏ³ß¶ÈÎª¾ùÔÈ·Ö²¼
+%nscalsä¸ºå°ºåº¦çš„æ•°ç›®
+%maxscalä¸ºå°ºåº¦æœ€å¤§å€¼ é»˜è®¤å°ºåº¦ä¸ºå‡åŒ€åˆ†å¸ƒ
 % s 1 ,s 2 the percentage of clipping pixels on each side
 function result = msrcp(img,nscals,maxscal,s1,s2)
 img = double(img);
@@ -26,10 +26,10 @@ for i = 1:nscals
     gauss = fftshift(gauss);
     rr = ifft2(T.*gauss);
     rr = abs(rr);
-    diff = diff + log(t) - log(rr);
+    diff = diff + log(t) - log(rr+1);
 end
 diff = diff/nscals;
-diff = scb(diff,1.5,1.5);
+diff = scb(diff,s1,s2);
 %simplestcolorbalance
 for m = 1:r
     for n = 1:c
@@ -62,7 +62,7 @@ result = cat(3,uint8(Rout),uint8(Gout), uint8(Bout));
 end
 
 function a = processcals(nscals,maxscal)
-%Ä¬ÈÏ²ÉÓÃ¾ùÔÈ·Ö²¼
+%é»˜è®¤é‡‡ç”¨å‡åŒ€åˆ†å¸ƒ
 a = [];
 size_step = maxscal/nscals;
 for i = 0:nscals-1
@@ -81,11 +81,11 @@ r = size(input,1);
 c = size(input,2);
 imgsize = r*c;
 sortinput = sort(input(:));
-per1 = int64(imgsize*s1/100);  %×¢ÒâÒç³ö int64
+per1 = int64(imgsize*s1/100);  %æ³¨æ„æº¢å‡º int64
 min1 = sortinput(per1);
 per2 = int64(imgsize*s2/100);
 max1 = sortinput(imgsize - per2 -1);
-%Ö»ĞèÒªÇóµÃmaxÓëmin
+%åªéœ€è¦æ±‚å¾—maxä¸min
 if max1<min1
     for m = 1:r
         for n = 1:c
